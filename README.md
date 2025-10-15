@@ -10,5 +10,5 @@ docker run -d \
   -p 2222:22 \
   -e SSH_USER=debian \
   -e SSH_PASSWORD='debian!23' \
-  ghcr.io/nickdu088/debian:latest
+  ghcr.io/nickdu088/linux-vps:latest
 ```
