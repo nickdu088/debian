@@ -28,7 +28,6 @@ RUN apk update && apk add --no-cache \
         sqlite \
         python3 \
         py3-pip \
-        py3-venv \
         bash \
         iputils \
         iproute2 \
