@@ -10,6 +10,7 @@ ENV TZ=Asia/Shanghai \
 # Copy necessary scripts
 COPY entrypoint.sh /entrypoint.sh
 COPY reboot.sh /usr/local/sbin/reboot
+COPY supervisord.conf /etc/supervisord.conf
 
 # Install dependencies and Python 3.12
 RUN export DEBIAN_FRONTEND=noninteractive && \
