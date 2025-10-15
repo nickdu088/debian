@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM alpine:latest
 
 LABEL org.opencontainers.image.source="https://github.com/nickdu088/debian"
 
@@ -12,12 +12,10 @@ COPY entrypoint.sh /entrypoint.sh
 COPY reboot.sh /usr/local/sbin/reboot
 COPY supervisord.conf /etc/supervisord.conf
 
-# Install dependencies and Python 3.12
-RUN export DEBIAN_FRONTEND=noninteractive && \
-    apt-get update && \
-    apt-get install -y \
+# Install dependencies
+RUN apk update && apk add --no-cache \
         tzdata \
-        openssh-server \
+        openssh \
         sudo \
         curl \
         ca-certificates \
@@ -27,38 +25,30 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
         nginx \
         net-tools \
         supervisor \
-        cron \
-        unzip \
-        iputils-ping \
-        telnet \
-        git \
+        sqlite \
+        python3 \
+        py3-pip \
+        py3-venv \
+        bash \
+        iputils \
         iproute2 \
-        gnupg2 \
-        lsb-release \
-        apt-transport-https \
-        software-properties-common \
-        --no-install-recommends && \
-    # Add deadsnakes repository for Python 3.12
-    echo "deb http://deb.debian.org/debian bookworm-backports main" > /etc/apt/sources.list.d/backports.list && \
-    apt-get update && \
-    apt-get install -y python3.12 python3.12-venv python3.12-dev && \
-    # Clean up
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    # Set up Python 3.12 as default python3
-    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1 && \
-    # Verify Python version
-    python3 --version && \
-    # Prepare the SSH server
-    mkdir /var/run/sshd && \
+        git \
+        shadow \
+        unzip \
+        bind-tools \
+        && \
+    # Set timezone
+    cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
+    echo "${TZ}" > /etc/timezone && \
+    # Add SSH user
+    adduser -D -s /bin/bash $SSH_USER && \
+    echo "$SSH_USER:$SSH_PASSWORD" | chpasswd && \
+    echo "$SSH_USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+    # Create SSH dir
+    mkdir -p /var/run/sshd && \
     chmod +x /entrypoint.sh && \
-    chmod +x /usr/local/sbin/reboot && \
-    ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
-    dpkg-reconfigure --frontend noninteractive tzdata
+    chmod +x /usr/local/sbin/reboot
 
-# Expose SSH port
 EXPOSE 22 80
 
-# Set the entry point and command
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["/usr/sbin/sshd", "-D"]
