@@ -1,12 +1,18 @@
 #!/usr/bin/env sh
 
-useradd -m -s /bin/bash $SSH_USER
-echo "$SSH_USER:$SSH_PASSWORD" | chpasswd
-usermod -aG sudo $SSH_USER
-echo "$SSH_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/init-users
-echo 'PermitRootLogin no' > /etc/ssh/sshd_config.d/my_sshd.conf
+# Create user if not exists
+if ! id "$SSH_USER" >/dev/null 2>&1; then
+    adduser -D -s /bin/sh "$SSH_USER"
+    echo "$SSH_USER:$SSH_PASSWORD" | chpasswd
+    addgroup "$SSH_USER" wheel
+    echo "$SSH_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$SSH_USER
+fi
+
+# Harden SSH: Disable root login
+echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
+
+# Generate SSH host keys if missing
+ssh-keygen -A
 
 # Start supervisord
 exec /usr/bin/supervisord -c /etc/supervisord.conf
-
-exec "$@"
