@@ -3,7 +3,9 @@ FROM alpine:latest
 LABEL org.opencontainers.image.source="https://github.com/nickdu088/linux-vps"
 
 # Set environment variables
-ENV TZ=Asia/Shanghai
+ENV TZ=Asia/Shanghai \
+    SSH_USER=debian \
+    SSH_PASSWORD=debian!23
 
 # Copy necessary scripts
 COPY entrypoint.sh /entrypoint.sh
