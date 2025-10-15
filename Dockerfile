@@ -36,17 +36,11 @@ RUN apk update && apk add --no-cache \
         unzip \
         bind-tools \
         && \
-    # Set timezone
-    cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
-    echo "${TZ}" > /etc/timezone && \
-    # Add SSH user
-    adduser -D -s /bin/bash $SSH_USER && \
-    echo "$SSH_USER:$SSH_PASSWORD" | chpasswd && \
-    echo "$SSH_USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
-    # Create SSH dir
-    mkdir -p /var/run/sshd && \
-    chmod +x /entrypoint.sh && \
-    chmod +x /usr/local/sbin/reboot
+    mkdir /var/run/sshd; \
+    chmod +x /entrypoint.sh; \
+    chmod +x /usr/local/sbin/reboot; \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime; \
+    echo $TZ > /etc/timezone
 
 EXPOSE 22 80
 
