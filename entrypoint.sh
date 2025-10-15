@@ -6,4 +6,7 @@ usermod -aG sudo $SSH_USER
 echo "$SSH_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/init-users
 echo 'PermitRootLogin no' > /etc/ssh/sshd_config.d/my_sshd.conf
 
+# Start supervisord
+exec /usr/bin/supervisord -c /etc/supervisord.conf
+
 exec "$@"
