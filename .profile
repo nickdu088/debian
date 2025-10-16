@@ -1,27 +1,29 @@
-# ~/.profile: executed by the command interpreter for login shells.
-# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
-# exists.
-# see /usr/share/doc/bash/examples/startup-files for examples.
-# the files are located in the bash-doc package.
+# ~/.profile – User login shell initialization
 
-# the default umask is set in /etc/profile; for setting the umask
-# for ssh logins, install and configure the libpam-umask package.
-#umask 022
+# ========== PATH Configuration ==========
 
-# if running bash
-if [ -n "$BASH_VERSION" ]; then
-    # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-        . "$HOME/.bashrc"
-    fi
-fi
+# Add custom user bin directories if they exist
+[ -d "$HOME/bin" ]       && PATH="$HOME/bin:$PATH"
+[ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
+# Export PATH
+export PATH
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
+# ========== Editor Settings ==========
+export EDITOR=nano     # or "vim" or "micro"
+export VISUAL=$EDITOR
+
+# ========== Locale (Uncomment and adjust if needed) ==========
+# export LANG="en_US.UTF-8"
+# export LC_ALL="en_US.UTF-8"
+
+# ========== History Control ==========
+export HISTCONTROL=ignoredups:erasedups
+export HISTSIZE=1000
+export HISTFILESIZE=2000
+
+# ========== Source .ashrc or .bashrc ==========
+# Make sure interactive settings apply even in login shells
+if [ -f "$HOME/.ashrc" ]; then
+    . "$HOME/.ashrc"
 fi
