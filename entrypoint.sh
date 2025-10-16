@@ -8,6 +8,9 @@ if ! id "$SSH_USER" >/dev/null 2>&1; then
     echo "$SSH_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$SSH_USER
 fi
 
+sed -i 's/^#\s*\(AllowAgentForwarding\s\+yes\)/\1/' /etc/ssh/sshd_config
+sed -i 's/^AllowTcpForwarding no/AllowTcpForwarding yes/' /etc/ssh/sshd_config
+sed -i 's/^GatewayPorts no/GatewayPorts yes/' /etc/ssh/sshd_config
 # Harden SSH: Disable root login
 echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
 
