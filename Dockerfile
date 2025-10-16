@@ -35,12 +35,14 @@ RUN apk update && apk add --no-cache \
         shadow \
         unzip \
         bind-tools \
-        && \
-    mkdir /var/run/sshd; \
-    chmod +x /entrypoint.sh; \
-    chmod +x /usr/local/sbin/reboot; \
-    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime; \
-    echo $TZ > /etc/timezone
+    && \
+    mkdir -p /var/run/sshd && \
+    chmod +x /entrypoint.sh /usr/local/sbin/reboot && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone && \
+    \
+    echo "AllowTcpForwarding yes" >> /etc/ssh/sshd_config && \
+    echo "AllowAgentForwarding yes" >> /etc/ssh/sshd_config
 
 EXPOSE 22 80
 
