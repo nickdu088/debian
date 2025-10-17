@@ -24,6 +24,8 @@ RUN apk update && apk add --no-cache \
         nano \
         nginx \
         net-tools \
+        openssl \
+        htop \
         supervisor \
         sqlite \
         python3 \
